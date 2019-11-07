@@ -1,43 +1,64 @@
-finance = {}
-
-count = 0
-high = 0
-low = 0
-ProfitLoss = 0
-date = []
-data = []
-fields = []
+import os
 import csv
-with open('budget_data.csv',newline = "") as csvFile:
-    csvreader = csv.reader(csvFile, delimiter=',')
-    fields = next(csvreader)
-    #print(f"CSV Header: {fields}")
+	
+
+budget_file = os.path.join("budget_data.csv")
+
+
+monthsCount = 0
+ProfitLoss = 0
+value = 0
+profitChange = 0
+dates = []
+profits = []
+
+with open(budget_file, newline = "") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter = ",")
+
+    header = next(csvreader)
+
+    row = next(csvreader)
+    monthsCount += 1
+    ProfitLoss += int(row[1])
+    value = int(row[1])
+    
     for row in csvreader:
+        dates.append(row[0])
         
-        #print(row)
-        #data = next(csvreader)
-        #data.append(row)
-        date = row[0]#This is the date from the line we are currently reading
-        finance = int(row[1])# This is the profit loss from the line we are currently reading in
-        if count == 0: #if count is zero, we want to set our current year to the first year we find
-            currentDate = date #setting the date
+        profitChange = int(row[1])-value
+        profits.append(profitChange)
+        value = int(row[1])
+        
+        monthsCount += 1
+        ProfitLoss = ProfitLoss + int(row[1])
 
-        if finance > high: #need to find the highest value in all of the data
-            high = finance #if we find a higher value, then we set high to that value
-        if finance < low: #we to find the highest value in all of the data
-            low = finance #if we find a higher value, then we set high to that value
+    greatest_inc = max(profits)
+    greatest_num = profits.index(greatest_inc)
+    greatest_date = dates[greatest_num]
+ 
+    greatest_dec = min(profits)
+    worst_num = profits.index(greatest_dec)
+    worst_date = dates[worst_num]
+    avg_change = sum(profits)/len(profits)
+    
 
-        if date == currentDate: #index 1 of array stores the year value, so we want to add all of the profit loss for a particular year
-            ProfitLoss += finance #adding the profit loss together
-        else:
-            #print('Profit Loss '+ str(ProfitLoss)) #if we reach a new year then we will print the previous year's profit loss
-            currentDate = date #setting current year to the new year we have found
-            ProfitLoss = finance #setting profit loss to the first profit loss value we found in the new year
 
-        count = count + 1 #track all of the months in the data set
+print("Financial Analysis")
+print("---------------------")
+print("Total Months: " + str(monthsCount))
+print("Total: $" + str(ProfitLoss))
+print("Average Change: $" + str(round(avg_change,2)))
+print("Greatest Increase in Profits: " + greatest_date +  " ($" + str(greatest_inc) + ")")
+print("Greatest Decrease in Profits: " + worst_date + " ($" + str(greatest_dec) + ")")
 
-print('High: ' + str(high))
+output = open("pybank_results.txt", "w")
 
-print('Low: ' + str(low))
+output.write("Financial Analysis\n")
+output.write("---------------------\n")
+output.write("Total Months: " + str(monthsCount))
+output.write("\nTotal: $" + str(ProfitLoss))
+output.write("\nAverage Change: $" + str(round(avg_change,2)))
+output.write("\nGreatest Increase in Profits: " + greatest_date +  " ($" + str(greatest_inc) + ")")
+output.write("\nGreatest Decrease in Profits: " + worst_date + " ($" + str(greatest_dec) + ")")
 
-print ('Total Number of Months: ' + str(count))
+output.close()

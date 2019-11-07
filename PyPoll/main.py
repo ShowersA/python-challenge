@@ -1,16 +1,14 @@
 import os
 import csv
 
-election_data_csv_path = os.path.join("..", "Resources", "election_data.csv")
+election_data_csv_path = os.path.join("election_data.csv")
 
 Total_votes = 0
 candidate_names = []
-#Winner = ""
-#winner_count = 0
 candidate_votes = []
-#Tracker = {}
 
-with open('election_data.csv', newline="") as csvfile:
+
+with open(election_data_csv_path, newline="") as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=",")
 
     Header = next(csv_reader)
@@ -41,43 +39,24 @@ print('-------------------')
 print('Total Votes: ' + str(Total_votes))
 print('-------------------')
 for count in range(len(candidate_names)):
-    print(f"{candidate_names[count]}: {percentages[count]}% ({candidate_votes[count]})")
+    print(str(candidate_names[count]) + ": " + str(percentages[count]) + "% (" + str(candidate_votes[count]) + ")")
 print("---------------------------")
 print('Winner: '+ str(winner))
 print("---------------------------")
 
-#print("Election Results")
-#print("--------------------------")
-#print(f"Total Votes: {num_votes}")
-
-#for count in range(len(candidates)):
-
- #   print(f"{candidates[count]}: {percentages[count]}% ({vote_counts[count]})")
-
-#print("---------------------------")
-#print(f"Winner: {winner}")
-#print("---------------------------")
 
 
+output = open("pypoll_results.txt", 'w')
 
-write_file = f"pypoll_results.txt"
-filewriter = open(write_file, mode = 'w')
-
-
-filewriter.write("Election Results\n")
-filewriter.write("--------------------------\n")
-filewriter.write('Total Votes: ' + str(Total_votes))
+output.write("Election Results\n")
+output.write("--------------------------\n")
+output.write('Total Votes: ' + str(Total_votes) + "\n")
 
 for count in range(len(candidate_names)):
-    filewriter.write(f"{candidate_names[count]}: {percentages[count]}% ({candidate_votes[count]})\n")
+    output.write(str(candidate_names[count]) + ": " + str(percentages[count]) + "% (" + str(candidate_votes[count]) + ")\n")
 
-filewriter.write("---------------------------\n")
-filewriter.write(f"Winner: {winner}\n")
-filewriter.write("---------------------------\n")
+output.write("---------------------------\n")
+output.write(f"Winner: {winner}\n")
+output.write("---------------------------\n")
 
-
-
-#close file
-filewriter.close()
-
-    
+output.close()  
