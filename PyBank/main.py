@@ -3,31 +3,41 @@ finance = {}
 count = 0
 high = 0
 low = 0
-yearProfitLoss = 0
-currentYear = 0
+ProfitLoss = 0
+date = []
+data = []
+fields = []
 import csv
-with open('budget_data.csv','r') as csv
-data = csv.reader(csvFile)
+with open('budget_data.csv',newline = "") as csvFile:
+    csvreader = csv.reader(csvFile, delimiter=',')
+    fields = next(csvreader)
+    #print(f"CSV Header: {fields}")
+    for row in csvreader:
+        
+        #print(row)
+        #data = next(csvreader)
+        #data.append(row)
+        date = row[0]#This is the date from the line we are currently reading
+        finance = int(row[1])# This is the profit loss from the line we are currently reading in
+        if count == 0: #if count is zero, we want to set our current year to the first year we find
+            currentDate = date #setting the date
 
-for array in data:
-    temp = array[2]# This is the profit loss from the line we are currently reading in
-    if count == 0: #if count is zero, we want to set our current year to the first year we find
-        currentYear = array[1] #setting the year
+        if finance > high: #need to find the highest value in all of the data
+            high = finance #if we find a higher value, then we set high to that value
+        if finance < low: #we to find the highest value in all of the data
+            low = finance #if we find a higher value, then we set high to that value
 
-    if temp > high: #we to find the highest value in all of the data
-        high = temp #if we find a higher value, then we set high to that value
-    if temp < low): #we to find the highest value in all of the data
-        low = temp #if we find a higher value, then we set high to that value
+        if date == currentDate: #index 1 of array stores the year value, so we want to add all of the profit loss for a particular year
+            ProfitLoss += finance #adding the profit loss together
+        else:
+            #print('Profit Loss '+ str(ProfitLoss)) #if we reach a new year then we will print the previous year's profit loss
+            currentDate = date #setting current year to the new year we have found
+            ProfitLoss = finance #setting profit loss to the first profit loss value we found in the new year
 
-    if array[1] == currentYear: #index 1 of array stores the year value, so we want to add all of the profit loss for a particular year
-        yearProfitLoss += array[2] #adding the profit loss together
-    else:
-        print(currentYear + 'Profit Loss '+ yearProfitLoss) #if we reach a new year then we will print the previous year's profit loss
-        currentYear = array[1] #setting current year to the new year we have found
-        yearProfitLoss = array[2] #setting profit loss to the first profit loss value we found in the new year
+        count = count + 1 #track all of the months in the data set
 
-    count = count + 1 #track all of the months in the data set
+print('High: ' + str(high))
 
-print('High: ' + high)
+print('Low: ' + str(low))
 
-print('Low: ' + low)
+print ('Total Number of Months: ' + str(count))
